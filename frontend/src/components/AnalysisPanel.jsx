@@ -26,17 +26,37 @@ const Block = ({ title, children }) => (
   </div>
 )
 
+function selectHistoricalDecisions(memories) {
+  const canonical = memories.filter((item) =>
+    item.metadata?.kind === 'decision' || item.metadata?.decision_id
+  )
+  const candidates = canonical.length ? canonical : memories
+  const seenDecisionIds = new Set()
+
+  return candidates.filter((item) => {
+    const decisionId = item.metadata?.decision_id
+    if (!decisionId) return true
+    if (seenDecisionIds.has(decisionId)) return false
+    seenDecisionIds.add(decisionId)
+    return true
+  }).slice(0, 5)
+}
+
 // Renders the full investigation: past decision → assumptions vs. now → reflection → human decision.
 // Everything shown here comes from the API response; nothing is decided in the frontend.
 export default function AnalysisPanel({ result, onRecord }) {
   const { historical_decisions: hist = [], analysis } = result
+  const historicalDecisions = selectHistoricalDecisions(hist)
   const rows = analysis?.assumption_assessments?.length ? analysis.assumption_assessments : analysis?.changed_assumptions || []
   const noLongerHold = rows.map(normalizeAssumption).filter((r) => !['unchanged', 'holds'].includes(r.assessment.toLowerCase())).map((r) => r.original)
 
   return (
     <div>
       <Step n="1" title="What we decided before">
-        <div className="space-y-4">{hist.map((h, i) => <HistoricalDecision key={i} item={h} />)}</div>
+        <div className="space-y-4">
+          {historicalDecisions.map((h, i) => <HistoricalDecision key={h.metadata?.decision_id || i} item={h} />)}
+          {hist.length > 5 && <p className="text-xs text-ink-soft">Showing the 5 most relevant decisions from organizational memory.</p>}
+        </div>
       </Step>
 
       <Down label="Do those assumptions still hold?" />
