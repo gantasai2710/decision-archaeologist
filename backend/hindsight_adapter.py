@@ -1,3 +1,5 @@
+import os
+
 from hindsight_client import Hindsight
 
 
@@ -10,14 +12,24 @@ class HindsightAdapter:
 
     def __init__(
         self,
-        base_url: str = "http://localhost:8888",
-        bank_id: str = "decision-arch",
+        base_url: str | None = None,
+        bank_id: str | None = None,
     ):
-        self.client = Hindsight(
-            base_url=base_url
+        configured_url = base_url or os.getenv(
+            "HINDSIGHT_URL", "http://localhost:8888"
         )
+        configured_bank_id = bank_id or os.getenv(
+            "HINDSIGHT_BANK_ID", "decision-arch"
+        )
+        api_key = os.getenv("HINDSIGHT_API_KEY")
 
-        self.bank_id = bank_id
+        client_options = {"base_url": configured_url}
+        if api_key:
+            client_options["api_key"] = api_key
+
+        self.client = Hindsight(**client_options)
+
+        self.bank_id = configured_bank_id
 
     def retain(self, content: str):
         return self.client.retain(
