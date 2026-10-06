@@ -18,14 +18,7 @@ export default function OutcomeForm({ decisionId, onSubmit, onCancel, submitting
   }
   return (
     <form onSubmit={submit} className="card space-y-5 border-accent-line p-5 sm:p-6" noValidate>
-      <div className="flex flex-wrap items-center gap-2 text-xs text-ink-soft">
-        {['Decision', 'Outcome', 'Lessons', 'Future decision'].map((s, i) => (
-          <span key={s} className="flex items-center gap-2">
-            {i > 0 && <span className="text-ink-mute">→</span>}
-            <span className={i === 1 ? 'rounded-full bg-accent-soft px-2.5 py-0.5 font-medium text-accent' : ''}>{s}</span>
-          </span>
-        ))}
-      </div>
+      <p className="text-sm leading-relaxed text-ink-soft">Record what happened and what you learned. After saving, you can analyze a follow-up proposal, record a new decision, or finish without a follow-up.</p>
       <div className="grid gap-5 sm:grid-cols-[160px_180px]">
         <Field label="Decision ID"><input className="input bg-slate-50 font-mono" value={decisionId} readOnly /></Field>
         <Field label="Observed at" error={err.observed_at}><input type="date" className="input" value={f.observed_at} onChange={(e) => setF({ ...f, observed_at: e.target.value })} /></Field>

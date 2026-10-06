@@ -103,6 +103,7 @@ def _decision_memory_text(d: DecisionRequest) -> str:
         f"Alternatives considered:\n{_bullets(d.alternatives)}\n"
         f"Constraints:\n{_bullets(d.constraints)}\n"
         f"Expected outcome: {d.expected_outcome}"
+        + (f"\nFollow-up to decision: {d.supersedes}\nTrigger: {d.trigger or 'Not recorded'}\nProposal title: {d.title}" if d.supersedes else "")
     )
 
 
@@ -220,12 +221,17 @@ class MemoryEngine:
 
     # RETAIN ---------------------------------------------------------------
     async def record_decision(self, d: DecisionRequest) -> RetainAckResponse:
+        metadata = {"kind": "decision", "decision_id": d.decision_id, "title": d.title, "status": d.status.value}
+        tags = ["decision", f"decision:{d.decision_id}", f"status:{d.status.value}"]
+        if d.supersedes:
+            metadata.update({"supersedes": d.supersedes, "trigger": d.trigger or "", "proposal_title": d.title})
+            tags.append(f"supersedes:{d.supersedes}")
         await self._adapter.retain(
             _decision_memory_text(d),
             context="Architectural decision record with rationale and assumptions",
             document_id=d.decision_id,  # re-recording the same id updates it
-            metadata={"kind": "decision", "decision_id": d.decision_id, "title": d.title, "status": d.status.value},
-            tags=["decision", f"decision:{d.decision_id}", f"status:{d.status.value}"],
+            metadata=metadata,
+            tags=tags,
         )
         self._local.remember_title(d.decision_id, d.title)
         return RetainAckResponse(success=True, decision_id=d.decision_id, memory_status="retained")

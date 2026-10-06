@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { analyzeProposal, friendlyError } from '../services/api.js'
 import { PageHeader } from '../components/ui.jsx'
 import ProposalForm from '../components/ProposalForm.jsx'
@@ -15,6 +15,7 @@ const DEMO = {
 
 export default function AnalyzeProposal() {
   const nav = useNavigate()
+  const followUp = useLocation().state?.followUp
   const [phase, setPhase] = useState('idle') // idle -> loading -> results | error
   const [stage, setStage] = useState(0)
   const [proposal, setProposal] = useState(null)
@@ -38,10 +39,10 @@ export default function AnalyzeProposal() {
   }
 
   const record = () => {
-    const first = result?.historical_decisions?.[0]?.metadata?.decision_id
+    const first = followUp?.decisionId || result?.historical_decisions?.[0]?.metadata?.decision_id
     nav('/decisions/new', { state: { prefill: {
-      context: proposal.context, problem: proposal.title,
-      ...(first ? { supersedes: first, trigger: result.analysis?.changed_conditions?.[0] || 'conditions changed', proposal_title: proposal.title } : {}),
+      context: followUp?.context || proposal.context, problem: proposal.title,
+      ...(first ? { supersedes: first, trigger: followUp?.trigger || result.analysis?.changed_conditions?.[0] || '', proposal_title: proposal.title } : {}),
     } } })
   }
 
@@ -62,7 +63,9 @@ export default function AnalyzeProposal() {
           <p className="mt-1 text-sm leading-relaxed">{proposal.proposal}</p>
         </div>
         <div className="h-6" />
-        {empty
+        {empty && followUp
+          ? <div className="card space-y-3 p-5"><p className="text-sm text-ink-soft">No related historical decisions were recalled. You can still record a follow-up using the outcome context below.</p><button className="btn-primary" onClick={record}>Record New Decision</button></div>
+          : empty
           ? <EmptyState title="No historical decisions found." message="Record decisions so Decision Archaeologist can build organizational memory." to="/decisions/new" action="Record Your First Decision" />
           : <AnalysisPanel result={result} onRecord={record} />}
       </div>
@@ -72,7 +75,11 @@ export default function AnalyzeProposal() {
   return (
     <div className="mx-auto max-w-3xl">
       <PageHeader title="Analyze a New Proposal" subtitle="Compare a proposed architectural change with the organization's historical decisions and assumptions." />
-      <ProposalForm onSubmit={run} demo={DEMO} />
+      {followUp && <div className="mb-5 rounded-lg border border-accent-line bg-accent-soft/60 p-4 text-sm">
+        <p className="font-medium text-accent">Follow-up from {followUp.decisionId}: {followUp.decisionTitle}</p>
+        <p className="mt-1 text-ink-soft">The prior outcome and lessons are included in the editable context below.</p>
+      </div>}
+      <ProposalForm key={followUp?.decisionId || 'new'} onSubmit={run} demo={DEMO} initial={followUp ? { title: `Follow-up: ${followUp.decisionTitle}`, context: followUp.context, proposal: '' } : {}} />
       <div className="mt-6 flex flex-wrap items-center gap-2 text-xs text-ink-soft">
         <span className="rounded-full bg-accent-soft px-2.5 py-0.5 font-medium text-accent">Recall</span>
         <span>related past decisions</span><span className="text-ink-mute">→</span>

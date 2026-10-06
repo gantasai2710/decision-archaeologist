@@ -35,6 +35,9 @@ class DecisionRequest(BaseModel):
     constraints: list[NonEmptyStr] = Field(default_factory=list)
     expected_outcome: NonEmptyStr
     status: DecisionStatus
+    supersedes: Optional[DecisionId] = None
+    trigger: Optional[NonEmptyStr] = None
+    proposal_title: Optional[ShortStr] = None
 
 
 class AnalyzeRequest(BaseModel):

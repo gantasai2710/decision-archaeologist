@@ -10,6 +10,7 @@ export default function DecisionForm({ initial = {}, nextId = '', onSubmit, subm
     ...initial,
   })
   const [lists, setLists] = useState({ assumptions: [''], alternatives: [''], constraints: [''] })
+  const [linkPrevious, setLinkPrevious] = useState(false)
   const [err, setErr] = useState({})
   const set = (k) => (e) => { setF({ ...f, [k]: e.target.value }); setErr({ ...err, [k]: undefined }) }
   const setList = (k) => (v) => { setLists({ ...lists, [k]: v }); setErr({ ...err, [k]: undefined }) }
@@ -27,7 +28,7 @@ export default function DecisionForm({ initial = {}, nextId = '', onSubmit, subm
       decision_id: core.decision_id.trim().toUpperCase(),
       status: core.status.toLowerCase(),
       assumptions: clean(lists.assumptions), alternatives: clean(lists.alternatives), constraints: clean(lists.constraints),
-      ...(supersedes ? { supersedes, trigger, proposal_title } : {}),
+      ...(linkPrevious && supersedes ? { supersedes, trigger: trigger || 'follow-up after recorded outcome' } : {}),
     })
   }
   const inv = (k) => (err[k] ? { 'data-invalid': true } : {})
@@ -76,6 +77,19 @@ export default function DecisionForm({ initial = {}, nextId = '', onSubmit, subm
           </Field>
         </div>
       </Section>
+
+      {f.supersedes && (
+        <Section title="Decision relationship" hint="Save an explicit link to the earlier decision. This is optional.">
+          <label className="flex items-start gap-3 text-sm">
+            <input type="checkbox" className="mt-1" checked={linkPrevious} onChange={(e) => setLinkPrevious(e.target.checked)} />
+            <span>Link this decision as a follow-up to <span className="font-mono">{f.supersedes}</span></span>
+          </label>
+          {linkPrevious && <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <Field label="What prompted this follow-up?"><input className="input" value={f.trigger || ''} onChange={set('trigger')} placeholder="Observed outcome or changed condition" /></Field>
+            <Field label="Proposal title"><input className="input" value={f.proposal_title || ''} onChange={set('proposal_title')} placeholder="Follow-up proposal" /></Field>
+          </div>}
+        </Section>
+      )}
 
       <div className="flex justify-end pt-1">
         <button type="submit" className="btn-primary px-6" disabled={submitting}>{submitting ? 'Recording…' : 'Record Decision'}</button>

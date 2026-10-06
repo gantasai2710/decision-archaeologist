@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { Field } from './ui.jsx'
 
-export default function ProposalForm({ onSubmit, disabled, demo }) {
-  const [f, setF] = useState({ title: '', context: '', proposal: '' })
+export default function ProposalForm({ onSubmit, disabled, demo, initial = {} }) {
+  const [f, setF] = useState(() => ({ title: '', context: '', proposal: '', ...initial }))
   const [err, setErr] = useState({})
   const set = (k) => (e) => { setF({ ...f, [k]: e.target.value }); setErr({ ...err, [k]: undefined }) }
   const submit = (e) => {

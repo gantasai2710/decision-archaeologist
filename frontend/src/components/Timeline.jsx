@@ -5,6 +5,7 @@ const DOT = {
   decision: 'border-ink bg-ink',
   proposal: 'border-accent bg-white border-dashed',
   outcome: 'border-teal-500 bg-teal-500',
+  future: 'border-slate-300 bg-white',
 }
 // steps: [{ type, title, subtitle, id, to, current, edge }]  — edge labels the link to the next step.
 export default function Timeline({ steps }) {

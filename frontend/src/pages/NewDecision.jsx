@@ -29,7 +29,7 @@ export default function NewDecision() {
       <PageHeader title="Record a Decision" subtitle="Capture what was decided, why, and which assumptions it depends on, so it can be recalled when conditions change." />
       {prefill?.supersedes && (
         <div className="mb-5 rounded-lg border border-accent-line bg-accent-soft/60 px-4 py-3 text-sm">
-          Started from your analysis against <span className="font-mono">{prefill.supersedes}</span>. Context and problem are prefilled; the chosen option and rationale are yours to write.
+          Started from analysis of <span className="font-mono">{prefill.supersedes}</span>. Context and problem are prefilled; chosen option and rationale remain yours to write. You can optionally save an explicit follow-up relationship below.
         </div>
       )}
       {error && <div className="mb-5"><ErrorState {...friendlyError(error, 'The decision could not be recorded')} /></div>}

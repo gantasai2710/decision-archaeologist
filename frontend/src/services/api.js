@@ -57,7 +57,7 @@ const pick = (real, fake) => (USE_MOCK ? fake() : real())
 export const getHealth = () => pick(() => request('/api/health'), mock.getHealth)
 export const createDecision = (data) => pick(async () => {
   const result = await request('/api/decisions', { method: 'POST', body: data })
-  saveDecisionToIndex(data)
+  saveDecisionToIndex({ ...data, proposal_title: data.proposal_title || data.title })
   return result
 }, () => mock.createDecision(data))
 export const analyzeProposal = (data) => pick(() => request('/api/analyze', { method: 'POST', body: data }), () => mock.analyzeProposal(data))
