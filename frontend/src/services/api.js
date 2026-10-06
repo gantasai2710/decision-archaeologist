@@ -1,9 +1,9 @@
 // All backend communication lives here. Components never call fetch() directly.
-// The frontend only talks to FastAPI, never to Hindsight or Gemini.
+// The frontend only talks to FastAPI, never to Hindsight Cloud or its provider.
 import * as mock from './mockApi.js'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
-export const USE_MOCK = import.meta.env.VITE_USE_MOCK !== 'false'
+export const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
 const DECISION_INDEX_KEY = 'da-real-decisions-v1'
 
 export class ApiError extends Error {

@@ -358,7 +358,7 @@ Preserve historical decisions when recording subsequent outcomes.
 
 
 
-Return meaningful errors if Hindsight or Gemini is unavailable.
+Return meaningful errors if Hindsight Cloud is unavailable.
 
 
 
@@ -366,5 +366,5 @@ Do not automatically approve or reject technical proposals; provide evidence for
 
 
 
-One implementation detail: the backend will need to resolve decision\_id to the correct historical decision. We should verify whether our installed Hindsight version provides the required metadata and filtering behavior before finalizing that implementation
+The backend links outcomes to decisions with Hindsight document metadata and tags. Hindsight Cloud is the persistent memory service.
 

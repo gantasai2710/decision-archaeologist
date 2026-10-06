@@ -64,7 +64,7 @@ class HindsightAdapter:
         base_url: str,
         bank_id: str,
         api_key: Optional[str] = None,
-        timeout: float = 90.0,
+        timeout: float = 240.0,
         health_timeout: float = 5.0,
         recall_budget: str = "mid",
         reflect_budget: str = "low",

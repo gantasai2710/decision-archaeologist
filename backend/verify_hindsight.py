@@ -33,7 +33,7 @@ async def main() -> int:
         base_url=os.getenv("HINDSIGHT_URL", "https://api.hindsight.vectorize.io"),
         bank_id=os.getenv("HINDSIGHT_BANK_ID", "decision-arch"),
         api_key=os.environ["HINDSIGHT_API_KEY"],
-        timeout=float(os.getenv("HINDSIGHT_TIMEOUT_SECONDS", "90")),
+        timeout=float(os.getenv("HINDSIGHT_TIMEOUT_SECONDS", "240")),
         recall_budget=os.getenv("HINDSIGHT_RECALL_BUDGET", "mid"),
         reflect_budget=os.getenv("HINDSIGHT_REFLECT_BUDGET", "low"),
     )

@@ -18,9 +18,11 @@ The frontend is configured to use the backend at `http://localhost:8000` with mo
    uvicorn server:app --reload --port 8000
    ```
 
-2. Start the frontend from the project root in another terminal:
+2. Configure and start the frontend in another terminal:
 
    ```powershell
+   cd frontend
+   Copy-Item .env.example .env
    npm install
    npm run dev
    ```
@@ -31,7 +33,7 @@ Hindsight credentials belong only in `backend/.env`; the frontend never receives
 
 ## Data and history
 
-The frontend's `.env` sets `VITE_USE_MOCK=false` and `VITE_API_URL=http://localhost:8000`. Restart Vite after changing these values.
+The frontend's `frontend/.env.example` sets `VITE_USE_MOCK=false` and `VITE_API_URL=http://localhost:8000`. Copy it to `frontend/.env` for local development. Restart Vite after changing these values.
 
 The backend currently supports health, decision and outcome writes, proposal analysis, and questions. It does not expose decision read endpoints. To keep the history and detail screens usable, the frontend keeps a small browser-local index of decisions successfully created through this UI. Hindsight remains the memory service used by the backend for recall and analysis. The browser index is not shared between browsers and does not import older records retained directly in Hindsight.
 

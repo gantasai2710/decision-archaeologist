@@ -46,7 +46,7 @@ Edit `.env` and set `HINDSIGHT_API_KEY`.
 | `CORS_ORIGINS` | `http://localhost:5173` | Comma-separated frontend origins |
 | `HINDSIGHT_RECALL_BUDGET` | `mid` | `low` / `mid` / `high` |
 | `HINDSIGHT_REFLECT_BUDGET` | `low` | `low` / `mid` / `high`; raise if analysis is too shallow |
-| `HINDSIGHT_TIMEOUT_SECONDS` | `90` | |
+| `HINDSIGHT_TIMEOUT_SECONDS` | `240` | |
 | `HINDSIGHT_AUTO_CREATE_BANK` | `false` | Leave off on Cloud |
 
 Frontend: `VITE_API_URL=http://localhost:8000` (no Hindsight credentials, ever).

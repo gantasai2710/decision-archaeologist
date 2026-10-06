@@ -44,7 +44,7 @@ class Settings:
             hindsight_url=os.getenv("HINDSIGHT_URL", "https://api.hindsight.vectorize.io"),
             bank_id=os.getenv("HINDSIGHT_BANK_ID", "decision-arch"),
             api_key=os.getenv("HINDSIGHT_API_KEY") or None,
-            timeout=float(os.getenv("HINDSIGHT_TIMEOUT_SECONDS", "90")),
+            timeout=float(os.getenv("HINDSIGHT_TIMEOUT_SECONDS", "240")),
             cors_origins=[o.strip() for o in origins.split(",") if o.strip()],
             recall_budget=os.getenv("HINDSIGHT_RECALL_BUDGET", "mid"),
             reflect_budget=os.getenv("HINDSIGHT_REFLECT_BUDGET", "low"),

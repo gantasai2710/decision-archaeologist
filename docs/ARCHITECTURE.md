@@ -84,11 +84,9 @@ Core operations:
 
 
 
-\### Gemini
+\### Hindsight Cloud
 
-AI model used through the Hindsight configuration for
-
-memory processing and reasoning.
+The hosted Hindsight service provides persistent decision memory and its RETAIN, RECALL, and REFLECT operations. The application does not configure a separate model provider.
 
 
 
